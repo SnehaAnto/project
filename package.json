@@ -1,0 +1,25 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "Timesheet app",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SnehaAnto/project.git"
+  },
+  "keywords": [
+    "webapp",
+    "timesheet",
+    "management",
+    "mobileapp"
+  ],
+  "author": "Snehasini, Taran",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SnehaAnto/project/issues"
+  },
+  "homepage": "https://github.com/SnehaAnto/project#readme"
+}
