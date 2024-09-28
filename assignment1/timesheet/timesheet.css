@@ -1,0 +1,15 @@
+body { 
+    background-color: #f8f9fa; 
+}
+
+h1 { 
+    color: #007bff; 
+    font-weight: bold; 
+}
+
+@media (max-width: 767px) { 
+    .timesheet-form, 
+    .recent-entries { 
+        margin-bottom: 20px; 
+    } 
+}
