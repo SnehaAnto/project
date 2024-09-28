@@ -1,4 +1,9 @@
 body { 
+    background-image: url('https://images.hdqwalls.com/wallpapers/peak-ios-14-p1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     background-color: #f8f9fa; 
 }
 
