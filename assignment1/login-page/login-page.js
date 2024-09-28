@@ -18,4 +18,16 @@ document.addEventListener('DOMContentLoaded', function() {
             emailInput.setAttribute('required', '');
         }
     });
+
+    const loginForm = document.getElementById('loginForm');
+
+    // Add an event listener for form submission
+    loginForm.addEventListener('submit', function (event) {
+        event.preventDefault();  // Prevent the form from submitting the usual way
+
+        // Simulate a login success and redirect to the timesheet page
+        window.location.href = '../timesheet/timesheet.html';  // Redirect to the timesheet page
+    });
+
+
 });
