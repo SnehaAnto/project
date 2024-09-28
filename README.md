@@ -43,10 +43,12 @@ Login Page:
 1. Select a login method (username or email)
 2. Fill in your credentials
 3. Click "Login."
+4. Land on Timesheet page.
 
 Timesheet Page: 
 1. After logging in, enter the date, project name, hours worked, and a description of your work
 2. Then click "Submit." Recent entries will be displayed below the form.
+3. Once done, click on Logout that redirects back to the Login page.
 
 ## File Structure
 
@@ -58,6 +60,8 @@ assignment1/
 ├──timesheet
     ├── timesheet.html              # Timesheet entry page HTML
     ├── timesheet.css               # Styles for the timesheet page
+    ├── timesheet.js                # JavaScript for timesheet
+
 ├── package.json                    # Project dependencies and scripts
 └── .gitignore                      # Files to be ignored by Git
 
