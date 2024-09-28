@@ -29,5 +29,4 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = '../timesheet/timesheet.html';  // Redirect to the timesheet page
     });
 
-
 });
