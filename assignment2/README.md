@@ -52,7 +52,7 @@ server/src/
 - ConfigModule: Allows use of environment variables for secure configuration.
 
 ## API Testing
-Tools like Postman or Insomnia are recommended for testing the API endpoints. Detailed documentation for each endpoint, including request and response formats, can be found in the src directory files.
+Postman was used for testing the API endpoints. Detailed documentation for each endpoint, including request and response formats, can be found in the docs folder.
 
 ## Future Phases
 Phase 3 and Phase 4 will build upon these APIs by adding more complex functionality, such as enhanced authentication and user role management.
