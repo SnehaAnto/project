@@ -1,0 +1,21 @@
+body {
+    background-image: url('https://ichef.bbci.co.uk/images/ic/1024xn/p02k6vry.jpg.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.login-card {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.form-select {
+    margin-bottom: 1rem;
+}
+
+#emailField {
+    display: none;
+}
