@@ -27,8 +27,8 @@ export class TimesheetService {
         return result
     }
 
-    async updatethis(id, createTimesheetDto){
-        const result = await this.timesheetModel.findByIdAndUpdate(id, createTimesheetDto).exec();
-        return result
-    }
+    // async updatethis(id, createTimesheetDto){
+    //     const result = await this.timesheetModel.findByIdAndUpdate(id, createTimesheetDto).exec();
+    //     return result
+    // }
 }

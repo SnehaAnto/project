@@ -1,4 +1,4 @@
-# project
+# Project - Phase 1: Static Design
 
 Web and Mobile Software Dev - Project - Timesheet App
 

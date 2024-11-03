@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Delete, Param, Put, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Get, Delete, Param, Put} from '@nestjs/common';
 import { TimesheetService } from './timesheet.service';
 import { Timesheet } from './timesheet.schema';
 
@@ -26,8 +26,8 @@ export class TimesheetController {
         return this.timesheetService.update(id, createTimesheetDto);
     }
 
-    @Patch("/:id")
-    async updatethis(@Param("id") id, @Body() createTimesheetDto: Partial<Timesheet>): Promise<Timesheet> {
-        return this.timesheetService.updatethis(id, createTimesheetDto);
-    }
+    // @Patch("/:id")
+    // async updatethis(@Param("id") id, @Body() createTimesheetDto: Partial<Timesheet>): Promise<Timesheet> {
+    //     return this.timesheetService.updatethis(id, createTimesheetDto);
+    // }
 }
