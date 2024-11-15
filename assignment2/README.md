@@ -3,7 +3,7 @@
 
 ## Prerequisites
 - Node.js (v22.11.0 or LTS version as per the setup)
-- MongoDB (ensure a MongoDB instance is running or available)
+- MongoDB/ MongoDB Atlas (ensure a MongoDB instance is running or available)
 - NestJS CLI (optional but helpful for development)
 - .env file with a MongoDB URI (MONGODB_URI)
 
@@ -47,7 +47,7 @@ server/src/
 
 ## Technologies Used
 - NestJS: Backend framework for building scalable server-side applications.
-- MongoDB: NoSQL database for storing user and timesheet data.
+- MongoDB Atlas: Database for storing user and timesheet data.
 - Mongoose: ORM for MongoDB, providing schema and validation support.
 - ConfigModule: Allows use of environment variables for secure configuration.
 

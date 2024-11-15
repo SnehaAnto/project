@@ -25,9 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     loginForm.addEventListener('submit', async function(event) {
         event.preventDefault();
-        
-        const identifier = loginMethod.value === 'username' ? 
-            usernameInput.value : emailInput.value;
+        const identifier = loginMethod.value === 'username' ? usernameInput.value : emailInput.value;
         const password = document.getElementById('password').value;
 
         try {
