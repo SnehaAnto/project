@@ -1,8 +1,11 @@
-import { Controller, Post, Body, Get, Delete, Param, Put} from '@nestjs/common';
+import { Controller, Post, Body, Get, Delete, Param, Put, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard';
 import { TimesheetService } from './timesheet.service';
 import { Timesheet } from './timesheet.schema';
 import { TimesheetDto } from '../dto/timesheet.dto';
+
 @Controller('timesheet')
+@UseGuards(AuthGuard)
 export class TimesheetController {
     constructor(private readonly timesheetService: TimesheetService) {}
 

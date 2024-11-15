@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TimesheetModule } from './timesheet/timesheet.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { LoginModule } from './login/login.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
     imports: [
@@ -15,7 +15,7 @@ import { LoginModule } from './login/login.module';
             inject: [ConfigService],
         }),
         TimesheetModule,
-        LoginModule
+        AuthModule
     ],
 })
 export class AppModule {}
