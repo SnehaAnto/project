@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Timesheet } from './timesheet.schema';
+import { TimesheetDto } from '../dto/timesheet.dto';
 
 @Injectable()
 export class TimesheetService {
     constructor(@InjectModel(Timesheet.name) private timesheetModel: Model<Timesheet>) {}
 
-    async create(createTimesheetDto: Partial<Timesheet>): Promise<Timesheet> {
-        const createdTimesheet = new this.timesheetModel(createTimesheetDto);
+    async create(timesheetDto: TimesheetDto): Promise<Timesheet> {
+        const createdTimesheet = new this.timesheetModel(timesheetDto);
         return createdTimesheet.save();
     }
 
@@ -16,19 +17,17 @@ export class TimesheetService {
         return this.timesheetModel.find().exec();
     }
 
-    async delete(id) {
-       const result = await this.timesheetModel.findByIdAndDelete(id).exec();
-       console.log("Deleted", result)
-       return result
+    async delete(id: string): Promise<Timesheet> {
+        const result = await this.timesheetModel.findByIdAndDelete(id).exec();
+        return result;
     }
     
-    async update(id, createTimesheetDto){
-        const result = await this.timesheetModel.findByIdAndUpdate(id, createTimesheetDto).exec();
-        return result
+    async update(id: string, timesheetDto: TimesheetDto): Promise<Timesheet> {
+        const result = await this.timesheetModel.findByIdAndUpdate(
+            id, 
+            timesheetDto,
+            { new: true }
+        ).exec();
+        return result;
     }
-
-    // async updatethis(id, createTimesheetDto){
-    //     const result = await this.timesheetModel.findByIdAndUpdate(id, createTimesheetDto).exec();
-    //     return result
-    // }
 }
