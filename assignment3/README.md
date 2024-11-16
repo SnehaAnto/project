@@ -1,58 +1,115 @@
-## Timesheet App- Phase 2: API Development
-    This project, built with NestJS, aims to create a scalable and secure system for managing user timesheets and authentication integrating MongoDB as the database. In this phase, the focus was on designing and implementing RESTful APIs for two core modules: Timesheet and Login. The application uses environment variables for configuration, with support for CRUD operations and authentication services.
+## Timesheet App- Phase 3: Authentication, Authorization, and Enhanced Features
+
+    This project, built with NestJS, provides a secure and feature-rich system for managing user timesheets. Phase 3 introduces authentication, authorization, and several enhanced features including pagination, soft delete, and role-based access control.
 
 ## Prerequisites
 - Node.js (v22.11.0 or LTS version as per the setup)
 - MongoDB/ MongoDB Atlas (ensure a MongoDB instance is running or available)
 - NestJS CLI (optional but helpful for development)
-- .env file with a MongoDB URI (MONGODB_URI)
+- .env file with required environment variables:
+  ```
+  MONGODB_URI=mongodb://<username>:<password>@<host>:<port>/<database>
+  JWT_SECRET=your_jwt_secret_key
+  JWT_EXPIRATION=1h
+  ```
 
 ## Getting Started
 1. Clone the Repository: git clone https://github.com/SnehaAnto/project
-2. Navigate to the assignment2 folder that contains the APIs for this application.
-3. Install Dependencies using the command: npm install
-4. Environment Setup
-    Create a .env file in the root directory and add your MongoDB connection string:
-    MONGODB_URI=mongodb://<username>:<password>@<host>:<port>/<database>
-5. Run the Application : npm run start
-The application should be running at http://localhost:3001
+2. Navigate to the assignment3 folder
+3. Install Dependencies: npm install
+4. Set up environment variables (see above)
+5. Run the Application: npm run start
+The application runs at http://localhost:3001
+
+## Security Features
+
+### Authentication
+- JWT-based authentication system
+- Password hashing using bcrypt
+- Token-based session management
+- Protected routes using AuthGuard
+
+### Authorization
+- Role-based access control (RBAC)
+- User roles: HR, EMPLOYEE
+- RoleGuard for role-specific endpoint protection
+- Role-based endpoint permissions
 
 ## Modules
-1. Timesheet Module
-This module allows users to create, view, update, and delete timesheets. It is structured with a Timesheet schema and provides the following endpoints:
 
-- POST /timesheet - Create a new timesheet entry.
-- GET /timesheet - Retrieve all timesheet entries.
-- DELETE /timesheet/ - Delete a timesheet entry by ID.
-- PUT /timesheet/ - Update a timesheet entry by ID.
+### 1. Timesheet Module
+Enhanced with pagination and soft delete functionality:
 
-2. Login Module
-This module manages user authentication with a focus on login functionality. It provides two main endpoints:
+- POST /timesheet - Create a new timesheet entry (Protected: EMPLOYEE, HR)
+- GET /timesheet - Retrieve timesheet entries with pagination (Protected: EMPLOYEE, HR)
+  - Query params: page (default: 1), limit (default: 10)
+  - Returns: { data: [], total: number, page: number, lastPage: number }
+- DELETE /timesheet/:id - Soft delete a timesheet entry (Protected: HR)
+- PUT /timesheet/:id - Update a timesheet entry (Protected: EMPLOYEE, HR)
+- GET /timesheet/deleted - View soft-deleted entries (Protected: HR)
 
-- POST /login - Authenticate a user using their identifier (username/email) and password.
-- GET /login - Retrieve all registered users (for testing and admin purposes).
+### 2. Auth Module
+Handles user authentication and authorization:
+
+- POST /auth/register - Register new user
+- POST /auth/login - Authenticate user and receive JWT
+- GET /auth/profile - Get current user profile (Protected)
+- PUT /auth/change-password - Update password (Protected)
+
+### 3. User Module
+Manages user operations:
+
+- GET /users - List all users
+- GET /users/:id - Get user details 
+- PUT /users/:id/role - Update user role (Protected: HR)
 
 ## Project Structure
 
 server/src/
+├── auth/
+│   ├── guards/
+│   │   ├── jwt-auth.guard.ts
+│   │   └── roles.guard.ts
+│   ├── decorators/
+│   │   └── roles.decorator.ts
+│   ├── auth.controller.ts
+│   ├── auth.service.ts
+│   └── auth.module.ts
 ├── timesheet/
-│   ├── timesheet.controller.ts # Timesheet API controller
-│   ├── timesheet.service.ts    # Timesheet business logic
-│   └── timesheet.schema.ts     # Mongoose schema for timesheet entries
-├── login/
-│   ├── login.controller.ts     # Login API controller
-│   ├── login.service.ts        # Login business logic
-│   └── user.schema.ts          # Mongoose schema for user authentication
-└── main.ts                 # Application entry point
+│   ├── timesheet.controller.ts
+│   ├── timesheet.service.ts
+│   └── timesheet.schema.ts
+├── users/
+│   ├── user.controller.ts
+│   ├── user.service.ts
+│   └── user.schema.ts
+└── main.ts
 
 ## Technologies Used
-- NestJS: Backend framework for building scalable server-side applications.
-- MongoDB Atlas: Database for storing user and timesheet data.
-- Mongoose: ORM for MongoDB, providing schema and validation support.
-- ConfigModule: Allows use of environment variables for secure configuration.
+- NestJS: Backend framework
+- MongoDB Atlas: Database
+- Mongoose: MongoDB ORM
+- JWT: Authentication tokens
+- bcrypt: Password hashing
+- class-validator: DTO validation
+- class-transformer: Object transformation
 
-## API Testing
-Postman was used for testing the API endpoints. Detailed documentation for each endpoint, including request and response formats, can be found in the docs folder.
+## Security Best Practices
+- Passwords are hashed using bcrypt
+- JWT tokens for stateless authentication
+- Role-based access control
+- Protected routes using Guards
+- Soft delete instead of hard delete
+- Input validation using DTOs
+- Environment variables for sensitive data
 
-## Future Phases
-Phase 3 and Phase 4 will build upon these APIs by adding more complex functionality, such as enhanced authentication and user role management.
+## API Documentation
+Complete API documentation with request/response examples is available in the /docs folder.
+
+## Error Handling
+The application implements a global exception filter that handles:
+- Validation errors
+- Authentication errors
+- Authorization errors
+- Database errors
+- Not found errors
