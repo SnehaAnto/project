@@ -1,0 +1,67 @@
+body { 
+    background-image: url('https://images.hdqwalls.com/wallpapers/peak-ios-14-p1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #f8f9fa; 
+}
+
+.navbar { 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+} 
+ 
+.navbar-brand { 
+    font-weight: bold; 
+    color: #007bff; 
+}
+
+h1 { 
+    color: #007bff; 
+    font-weight: bold; 
+}
+
+.timesheet-form { 
+    background-color: #ffffff; 
+    padding: 20px; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+} 
+ 
+.form-label { 
+    font-weight: 500; 
+} 
+ 
+.btn-primary { 
+    background-color: #007bff; 
+    border-color: #007bff; 
+} 
+ 
+.btn-primary:hover { 
+    background-color: #0056b3; 
+    border-color: #0056b3; 
+}
+
+.recent-entries { 
+    background-color: #ffffff; 
+    padding: 20px; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+} 
+ 
+.recent-entries h2 { 
+    color: #007bff; 
+    font-weight: bold; 
+    margin-bottom: 20px; 
+} 
+ 
+.table { 
+    font-size: 0.9rem; 
+}
+
+@media (max-width: 767px) { 
+    .timesheet-form, 
+    .recent-entries { 
+        margin-bottom: 20px; 
+    } 
+}
