@@ -21,6 +21,8 @@ export default function Timesheet() {
     hours: '',
     description: ''
   });
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [selectedEntryId, setSelectedEntryId] = useState<string>('');
 
   useEffect(() => {
     loadTimesheets();
@@ -65,6 +67,36 @@ export default function Timesheet() {
   const handleLogout = () => {
     localStorage.removeItem('userData');
     router.push('/login');
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await fetch(`http://localhost:3001/timesheet/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        await loadTimesheets();
+        alert('Entry deleted successfully');
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || 'Failed to delete entry');
+      }
+    } catch (error) {
+      console.error('Error deleting entry:', error);
+      alert('Failed to delete entry. Please try again.');
+    }
+    setShowDeleteConfirm(false);
+  };
+
+  const confirmDelete = (id: string) => {
+    setSelectedEntryId(id);
+    setShowDeleteConfirm(true);
   };
 
   return (
@@ -179,6 +211,7 @@ export default function Timesheet() {
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Project</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hours</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -189,11 +222,19 @@ export default function Timesheet() {
                             <td className="px-6 py-4 whitespace-nowrap">{entry.project}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{entry.hours}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{entry.description}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <button
+                                onClick={() => confirmDelete(entry._id)}
+                                className="text-red-600 hover:text-red-900"
+                              >
+                                Delete
+                              </button>
+                            </td>
                           </tr>
                         ))
                       ) : (
                         <tr>
-                          <td colSpan={4} className="px-6 py-4 text-center text-gray-500">
+                          <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
                             No timesheet entries found
                           </td>
                         </tr>
@@ -206,6 +247,30 @@ export default function Timesheet() {
           </div>
         </main>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl relative z-50">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Confirm Delete</h3>
+            <p className="text-sm text-gray-500 mb-4">Are you sure you want to delete this entry?</p>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDelete(selectedEntryId)}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 
