@@ -28,7 +28,13 @@ export default function Timesheet() {
 
   const loadTimesheets = async () => {
     try {
-      const response = await fetch('http://localhost:3001/timesheet');
+      const token = localStorage.getItem('accessToken');
+      const response = await fetch('http://localhost:3001/timesheet', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      });
       const data = await response.json();
       setEntries(data.data || []);
     } catch (error) {
@@ -40,9 +46,11 @@ export default function Timesheet() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem('accessToken');
       await fetch('http://localhost:3001/timesheet', {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
@@ -62,8 +70,8 @@ export default function Timesheet() {
   return (
     <div className="relative min-h-screen">
       <Image
-        src="/images/calendar.jpg"
-        alt="Calendar Background"
+        src="/images/timesheet-bg.jpg"
+        alt="Timesheet Background"
         fill
         className="object-cover"
         priority

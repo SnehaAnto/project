@@ -13,20 +13,33 @@ export default function Login() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3001/login', {
+      const payload = loginMethod === 'email' 
+        ? { email: identifier, password }
+        : { username: identifier, password };
+
+      const response = await fetch('http://localhost:3001/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ identifier, password }),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
-        const userData = await response.json();
-        localStorage.setItem('userData', JSON.stringify(userData));
+        const data = await response.json();
+        localStorage.setItem('accessToken', data.access_token);
+        
+        const tokenPayload = JSON.parse(atob(data.access_token.split('.')[1]));
+        localStorage.setItem('userData', JSON.stringify({
+          username: tokenPayload.username,
+          email: tokenPayload.email,
+          role: tokenPayload.role
+        }));
+
         router.push('/timesheet');
       } else {
-        alert('Invalid credentials');
+        const errorData = await response.json();
+        alert(errorData.message || 'Invalid credentials');
       }
     } catch (error) {
       console.error('Login error:', error);
