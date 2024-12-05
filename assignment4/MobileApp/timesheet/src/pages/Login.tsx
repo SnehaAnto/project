@@ -73,7 +73,7 @@ const Login: React.FC = () => {
           <h2 className="ion-text-center ion-padding-bottom">Login</h2>
           
           <IonItem className="ion-margin-bottom">
-            <IonLabel position="floating">Login Method</IonLabel>
+            <IonLabel>Login Method</IonLabel>
             <IonSelect value={loginMethod} onIonChange={e => setLoginMethod(e.detail.value)}>
               <IonSelectOption value="email">Email</IonSelectOption>
               <IonSelectOption value="username">Username</IonSelectOption>

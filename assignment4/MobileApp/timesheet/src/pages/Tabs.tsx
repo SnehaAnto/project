@@ -1,10 +1,11 @@
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet, IonPage, IonContent } from '@ionic/react';
 import { Route, Redirect } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { addCircle, list, person } from 'ionicons/icons';
 import NewEntry from './NewEntry';
 import History from './History';
 import Profile from './Profile';
+import './Tabs.css';
 
 const Tabs: React.FC = () => {
   return (
@@ -13,9 +14,15 @@ const Tabs: React.FC = () => {
         <div className="content-container">
           <IonTabs>
             <IonRouterOutlet>
-              <Route exact path="/tabs/new-entry" component={NewEntry} />
-              <Route exact path="/tabs/history" component={History} />
-              <Route exact path="/tabs/profile" component={Profile} />
+              <Route exact path="/tabs/new-entry">
+                <NewEntry />
+              </Route>
+              <Route exact path="/tabs/history">
+                <History />
+              </Route>
+              <Route exact path="/tabs/profile">
+                <Profile />
+              </Route>
               <Route exact path="/tabs">
                 <Redirect to="/tabs/new-entry" />
               </Route>
