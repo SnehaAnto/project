@@ -5,7 +5,7 @@ import {
   IonCard, IonCardContent, IonCardHeader, IonCardTitle, useIonToast
 } from '@ionic/react';
 import { logOut, person } from 'ionicons/icons';
-import { useIonRouter } from '@ionic/react';
+import { useIonRouter, useIonViewWillEnter } from '@ionic/react';
 import './Profile.css';
 
 interface UserProfile {
@@ -19,39 +19,43 @@ const Profile: React.FC = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [present] = useIonToast();
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await fetch('http://localhost:3001/user/profile', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setProfile(data);
-        } else {
-          const errorData = await response.json();
-          present({
-            message: errorData.message || 'Failed to load profile',
-            duration: 2000,
-            position: 'bottom',
-            color: 'danger'
-          });
+  const fetchProfile = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/users/profile', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
-      } catch (error) {
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setProfile(data);
+      } else {
+        const errorData = await response.json();
         present({
-          message: 'Network error. Please try again.',
+          message: errorData.message || 'Failed to load profile',
           duration: 2000,
           position: 'bottom',
           color: 'danger'
         });
       }
-    };
+    } catch (error) {
+      present({
+        message: 'Network error. Please try again.',
+        duration: 2000,
+        position: 'bottom',
+        color: 'danger'
+      });
+    }
+  };
 
+  useEffect(() => {
     fetchProfile();
   }, [present]);
+
+  useIonViewWillEnter(() => {
+    fetchProfile();
+  });
 
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
