@@ -49,18 +49,31 @@ export default function Timesheet() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('accessToken');
-      await fetch('http://localhost:3001/timesheet', {
+      const response = await fetch('http://localhost:3001/timesheet', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          hours: Number(formData.hours),
+        }),
       });
-      loadTimesheets();
-      setFormData({ date: '', project: '', hours: '', description: '' });
+
+      if (response.ok) {
+        // Clear form
+        setFormData({ date: '', project: '', hours: '', description: '' });
+        // Reload the entries list
+        await loadTimesheets();
+        alert('Entry added successfully!');
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || 'Failed to add entry');
+      }
     } catch (error) {
       console.error('Error submitting timesheet:', error);
+      alert('Failed to add entry. Please try again.');
     }
   };
 
