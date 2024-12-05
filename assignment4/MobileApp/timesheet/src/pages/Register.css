@@ -1,0 +1,74 @@
+.register-page {
+  --background: none;
+  background-image: url('/images/login-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-form {
+  width: 90%;
+  max-width: 400px;
+  margin: 1rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+.register-form ion-item {
+  --background: transparent;
+  --border-color: var(--ion-color-medium);
+  --highlight-height: 2px;
+  margin-bottom: 12px;
+}
+
+.register-form ion-label {
+  --color: var(--ion-color-medium);
+}
+
+.register-form h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--ion-color-dark);
+  margin-bottom: 20px;
+}
+
+.register-form ion-input,
+.register-form ion-select {
+  --padding-start: 0;
+  --padding-top: 8px;
+  margin-top: 8px;
+}
+
+.login-link {
+  margin-top: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  .register-form {
+    width: 400px;
+    margin: 2rem auto;
+  }
+}
+
+@media (max-height: 667px) {
+  .register-form {
+    padding: 16px;
+    max-height: 95vh;
+  }
+  
+  .register-form h2 {
+    margin-bottom: 12px;
+    font-size: 1.2em;
+  }
+} 
