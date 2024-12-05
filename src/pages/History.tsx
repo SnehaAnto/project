@@ -30,34 +30,20 @@ const History: React.FC = () => {
   const [present] = useIonToast();
 
   const loadEntries = async () => {
+    console.log('Loading entries...');
     try {
       const response = await fetch('http://localhost:3001/timesheet', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
       });
-
       if (response.ok) {
         const responseData: TimesheetResponse = await response.json();
         console.log('Entries loaded:', responseData.data);
         setEntries(responseData.data);
-      } else {
-        const errorData = await response.json();
-        present({
-          message: errorData.message || 'Failed to load entries',
-          duration: 2000,
-          position: 'top',
-          color: 'danger'
-        });
       }
     } catch (error) {
       console.error('Error loading entries:', error);
-      present({
-        message: 'Network error. Please try again.',
-        duration: 2000,
-        position: 'top',
-        color: 'danger'
-      });
     }
   };
 
@@ -70,6 +56,7 @@ const History: React.FC = () => {
   });
 
   const handleDelete = async (id: string) => {
+    console.log('Attempting to delete entry:', id);
     try {
       const response = await fetch(`http://localhost:3001/timesheet/${id}`, {
         method: 'DELETE',
@@ -78,32 +65,25 @@ const History: React.FC = () => {
           'Content-Type': 'application/json'
         }
       });
-
+      
       if (response.ok) {
         console.log('Entry deleted:', id);
         present({
           message: 'Entry deleted successfully',
           duration: 2000,
-          position: 'top',
           color: 'success'
         });
         
         await loadEntries();
       } else {
         const errorData = await response.json();
-        present({
-          message: errorData.message || 'Failed to delete entry',
-          duration: 2000,
-          position: 'top',
-          color: 'danger'
-        });
+        throw new Error(errorData.message || 'Failed to delete entry');
       }
     } catch (error) {
       console.error('Error deleting entry:', error);
       present({
-        message: 'Network error. Please try again.',
+        message: 'Failed to delete entry',
         duration: 2000,
-        position: 'top',
         color: 'danger'
       });
     }

@@ -48,27 +48,19 @@ const Login: React.FC = () => {
         }));
         
         router.push('/tabs/new-entry', 'forward', 'replace');
-        present({
-          message: 'Login successful!',
-          duration: 2000,
-          position: 'bottom',
-          color: 'success'
-        });
       } else {
         const errorData = await response.json();
         present({
-          message: errorData.message || 'Login failed',
-          duration: 2000,
-          position: 'bottom',
+          message: errorData.message || 'Invalid credentials',
+          duration: 3000,
           color: 'danger'
         });
       }
     } catch (error) {
       console.error('Login error:', error);
       present({
-        message: 'Network error. Please try again.',
-        duration: 2000,
-        position: 'bottom',
+        message: 'Login failed. Please try again.',
+        duration: 3000,
         color: 'danger'
       });
     }

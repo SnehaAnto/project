@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   IonContent, IonPage, IonHeader, IonToolbar, IonTitle,
   IonList, IonItem, IonLabel, IonButton, IonIcon,
-  IonCard, IonCardContent, IonCardHeader, IonCardTitle, useIonToast
+  IonCard, IonCardContent, IonCardHeader, IonCardTitle
 } from '@ionic/react';
 import { logOut, person } from 'ionicons/icons';
 import { useIonRouter } from '@ionic/react';
@@ -17,7 +17,6 @@ interface UserProfile {
 const Profile: React.FC = () => {
   const router = useIonRouter();
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [present] = useIonToast();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -27,69 +26,21 @@ const Profile: React.FC = () => {
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
           }
         });
-
         if (response.ok) {
           const data = await response.json();
           setProfile(data);
-        } else {
-          const errorData = await response.json();
-          present({
-            message: errorData.message || 'Failed to load profile',
-            duration: 2000,
-            position: 'bottom',
-            color: 'danger'
-          });
         }
       } catch (error) {
-        present({
-          message: 'Network error. Please try again.',
-          duration: 2000,
-          position: 'bottom',
-          color: 'danger'
-        });
+        console.error('Error fetching profile:', error);
       }
     };
 
     fetchProfile();
-  }, [present]);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
     router.push('/login');
-  };
-
-  const handleUpdateProfile = async () => {
-    try {
-      const response = await fetch('http://localhost:3001/users/profile', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        }
-      });
-
-      if (response.ok) {
-        present({
-          message: 'Profile updated successfully',
-          duration: 2000,
-          position: 'bottom',
-          color: 'success'
-        });
-      } else {
-        const errorData = await response.json();
-        present({
-          message: errorData.message || 'Failed to update profile',
-          duration: 2000,
-          position: 'bottom',
-          color: 'danger'
-        });
-      }
-    } catch (error) {
-      present({
-        message: 'Network error. Please try again.',
-        duration: 2000,
-        position: 'bottom',
-        color: 'danger'
-      });
-    }
   };
 
   return (

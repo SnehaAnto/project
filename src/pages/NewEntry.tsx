@@ -2,19 +2,17 @@ import React, { useState } from 'react';
 import {
   IonContent, IonPage, IonHeader, IonToolbar, IonTitle,
   IonItem, IonLabel, IonInput, IonTextarea, IonButton,
-  IonDatetime, IonSelect, IonSelectOption, useIonToast
+  IonDatetime, IonSelect, IonSelectOption
 } from '@ionic/react';
 import './NewEntry.css';
 
 const NewEntry: React.FC = () => {
-  const [date, setDate] = useState(new Date().toISOString());
+  const [date, setDate] = useState('');
   const [project, setProject] = useState('');
   const [hours, setHours] = useState('');
   const [description, setDescription] = useState('');
-  const [present] = useIonToast();
 
   const handleSubmit = async () => {
-    const descriptionInput = document.querySelector('ion-textarea')?.value || '';
     try {
       const response = await fetch('http://localhost:3001/timesheet', {
         method: 'POST',
@@ -26,39 +24,19 @@ const NewEntry: React.FC = () => {
           date,
           project,
           hours: Number(hours),
-          description: descriptionInput
+          description
         })
       });
 
       if (response.ok) {
         // Clear form
-        setDate(new Date().toISOString());
+        setDate('');
         setProject('');
         setHours('');
         setDescription('');
-        present({
-          message: 'Entry successfully added!',
-          duration: 2000,
-          position: 'bottom',
-          color: 'success'
-        });
-      } else {
-        const errorData = await response.json();
-        present({
-          message: errorData.message || 'Failed to save entry',
-          duration: 2000,
-          position: 'bottom',
-          color: 'danger'
-        });
       }
     } catch (error) {
       console.error('Error saving timesheet:', error);
-      present({
-        message: 'Network error. Please try again.',
-        duration: 2000,
-        position: 'bottom',
-        color: 'danger'
-      });
     }
   };
 
@@ -105,7 +83,7 @@ const NewEntry: React.FC = () => {
             <IonLabel position="stacked">Description</IonLabel>
             <IonTextarea
               value={description}
-              onIonChange={e => setDescription(e.detail.value || '')}
+              onIonChange={e => setDescription(e.detail.value!)}
               rows={4}
             />
           </IonItem>
