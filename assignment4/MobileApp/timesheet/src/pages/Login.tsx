@@ -1,16 +1,27 @@
-import { IonContent, IonPage, IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, IonButton } from '@ionic/react';
+import { IonContent, IonPage, IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, IonButton, useIonToast } from '@ionic/react';
 import React, { useState, FormEvent } from 'react';
 import { useIonRouter } from '@ionic/react';
 import './Login.css';
 
 const Login: React.FC = () => {
   const router = useIonRouter();
-  const [loginMethod, setLoginMethod] = useState('');
+  const [present] = useIonToast();
+  const [loginMethod, setLoginMethod] = useState('email');
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    
+    if (!identifier || !password) {
+      present({
+        message: 'Please fill in all fields',
+        duration: 3000,
+        color: 'danger'
+      });
+      return;
+    }
+
     try {
       const payload = loginMethod === 'email' 
         ? { email: identifier, password }
@@ -27,49 +38,74 @@ const Login: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem('accessToken', data.access_token);
-        router.push('/tabs/new-entry');
+        
+        // Store user data from token
+        const tokenPayload = JSON.parse(atob(data.access_token.split('.')[1]));
+        localStorage.setItem('userData', JSON.stringify({
+          username: tokenPayload.username,
+          email: tokenPayload.email,
+          role: tokenPayload.role
+        }));
+        
+        router.push('/tabs/new-entry', 'forward', 'replace');
+      } else {
+        const errorData = await response.json();
+        present({
+          message: errorData.message || 'Invalid credentials',
+          duration: 3000,
+          color: 'danger'
+        });
       }
     } catch (error) {
       console.error('Login error:', error);
+      present({
+        message: 'Login failed. Please try again.',
+        duration: 3000,
+        color: 'danger'
+      });
     }
   };
 
   return (
     <IonPage>
       <IonContent className="login-page">
-        <div className="login-form">
-          <form onSubmit={handleSubmit} className="login-form">
-            <IonItem>
-              <IonLabel position="stacked">Login Method</IonLabel>
-              <IonSelect value={loginMethod} onIonChange={e => setLoginMethod(e.detail.value)}>
-                <IonSelectOption value="username">Username</IonSelectOption>
-                <IonSelectOption value="email">Email</IonSelectOption>
-              </IonSelect>
-            </IonItem>
+        <form onSubmit={handleSubmit} className="login-form">
+          <h2 className="ion-text-center ion-padding-bottom">Login</h2>
+          
+          <IonItem className="ion-margin-bottom">
+            <IonLabel position="floating">Login Method</IonLabel>
+            <IonSelect value={loginMethod} onIonChange={e => setLoginMethod(e.detail.value)}>
+              <IonSelectOption value="email">Email</IonSelectOption>
+              <IonSelectOption value="username">Username</IonSelectOption>
+            </IonSelect>
+          </IonItem>
 
-            <IonItem>
-              <IonLabel position="stacked">{loginMethod === 'email' ? 'Email' : 'Username'}</IonLabel>
-              <IonInput
-                type={loginMethod === 'email' ? 'email' : 'text'}
-                value={identifier}
-                onIonChange={e => setIdentifier(e.detail.value!)}
-              />
-            </IonItem>
+          <IonItem className="ion-margin-bottom">
+            <IonLabel>{loginMethod === 'email' ? 'Email' : 'Username'}</IonLabel>
+            <IonInput
+              type={loginMethod === 'email' ? 'email' : 'text'}
+              value={identifier}
+              onIonChange={e => setIdentifier(e.detail.value!)}
+              required
+              className="ion-padding-top"
+            />
+          </IonItem>
 
-            <IonItem>
-              <IonLabel position="stacked">Password</IonLabel>
-              <IonInput
-                type="password"
-                value={password}
-                onIonChange={e => setPassword(e.detail.value!)}
-              />
-            </IonItem>
+          <IonItem className="ion-margin-bottom">
+            <IonLabel>Password</IonLabel>
+            <IonInput
+              type="password"
+              value={password}
+              onIonChange={e => setPassword(e.detail.value!)}
+              required
+              className="ion-padding-top"
+            />
+          </IonItem>
 
-            <IonButton expand="block" type="submit" className="ion-margin-top">
-              Login
-            </IonButton>
-          </form>
-        </div>
+          <IonButton expand="block" type="submit" className="ion-margin-top">
+            Login
+          </IonButton>
+        </form>
       </IonContent>
     </IonPage>
   );
