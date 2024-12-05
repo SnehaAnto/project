@@ -23,9 +23,16 @@ export default function Timesheet() {
   });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [selectedEntryId, setSelectedEntryId] = useState<string>('');
+  const [userRole, setUserRole] = useState<string>('');
 
   useEffect(() => {
     loadTimesheets();
+    // Get user role from JWT token
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      setUserRole(payload.role);
+    }
   }, []);
 
   const loadTimesheets = async () => {
@@ -127,8 +134,16 @@ export default function Timesheet() {
         <nav className="bg-white/90 backdrop-blur-sm shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
-              <div className="flex items-center">
+              <div className="flex items-center space-x-4">
                 <span className="text-blue-600 font-bold text-xl">Timesheet App</span>
+                {userRole === 'hr' && (
+                  <a
+                    href="/hr"
+                    className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    HR Dashboard
+                  </a>
+                )}
               </div>
               <button
                 onClick={handleLogout}

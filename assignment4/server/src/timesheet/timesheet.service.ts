@@ -82,4 +82,10 @@ export class TimesheetService {
         ).exec();
         return result?.tasks;
     }
+
+    async findDeleted() {
+        return this.timesheetModel.find({ 
+            deletedAt: { $ne: null } 
+        }).exec();
+    }
 }

@@ -6,5 +6,5 @@ export default function RegisterPage() {
 }
 
 export const metadata: Metadata = {
-  title: 'Register| Timesheet App',
+  title: 'Register',
 };

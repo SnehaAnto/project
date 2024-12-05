@@ -7,6 +7,7 @@ import { Task } from '../dto/user.dto';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from '../auth/enums/role.enum';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+
 @Controller('timesheet')
 @UseGuards(AuthGuard, RolesGuard)
 export class TimesheetController {
@@ -50,5 +51,12 @@ export class TimesheetController {
     @Delete("/:id/task/:taskId")
     async deleteTask(@Param("id") id, @Param("taskId") taskId) {
         return this.timesheetService.deleteTask(id, taskId);
+    }
+
+    @Get('deleted')
+    @Roles(Role.HR)
+    async getDeletedEntries() {
+        const deletedEntries = await this.timesheetService.findDeleted();
+        return { data: deletedEntries };
     }
 }
