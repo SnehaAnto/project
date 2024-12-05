@@ -16,4 +16,35 @@
     --ion-text-color: #ffffff;
     --ion-text-color-rgb: 255,255,255;
   }
+}
+
+/* Add these media queries for responsive images */
+@media (max-width: 576px) {
+  .login-page, .tabs-page {
+    background-size: 200% auto;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  .login-page, .tabs-page {
+    background-size: 150% auto;
+  }
+}
+
+@media (max-width: 576px) {
+  .login-page, .tabs-page {
+    background-position: center;
+  }
+  
+  ion-content {
+    --padding-start: 1rem;
+    --padding-end: 1rem;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .login-form, .content-container {
+    background: rgba(18, 18, 18, 0.95);
+    color: var(--ion-text-color);
+  }
 } 

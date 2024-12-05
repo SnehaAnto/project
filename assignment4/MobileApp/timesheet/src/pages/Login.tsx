@@ -36,38 +36,40 @@ const Login: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent className="ion-padding">
-        <form onSubmit={handleSubmit} className="login-form">
-          <IonItem>
-            <IonLabel position="stacked">Login Method</IonLabel>
-            <IonSelect value={loginMethod} onIonChange={e => setLoginMethod(e.detail.value)}>
-              <IonSelectOption value="username">Username</IonSelectOption>
-              <IonSelectOption value="email">Email</IonSelectOption>
-            </IonSelect>
-          </IonItem>
+      <IonContent className="login-page">
+        <div className="login-form">
+          <form onSubmit={handleSubmit} className="login-form">
+            <IonItem>
+              <IonLabel position="stacked">Login Method</IonLabel>
+              <IonSelect value={loginMethod} onIonChange={e => setLoginMethod(e.detail.value)}>
+                <IonSelectOption value="username">Username</IonSelectOption>
+                <IonSelectOption value="email">Email</IonSelectOption>
+              </IonSelect>
+            </IonItem>
 
-          <IonItem>
-            <IonLabel position="stacked">{loginMethod === 'email' ? 'Email' : 'Username'}</IonLabel>
-            <IonInput
-              type={loginMethod === 'email' ? 'email' : 'text'}
-              value={identifier}
-              onIonChange={e => setIdentifier(e.detail.value!)}
-            />
-          </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">{loginMethod === 'email' ? 'Email' : 'Username'}</IonLabel>
+              <IonInput
+                type={loginMethod === 'email' ? 'email' : 'text'}
+                value={identifier}
+                onIonChange={e => setIdentifier(e.detail.value!)}
+              />
+            </IonItem>
 
-          <IonItem>
-            <IonLabel position="stacked">Password</IonLabel>
-            <IonInput
-              type="password"
-              value={password}
-              onIonChange={e => setPassword(e.detail.value!)}
-            />
-          </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">Password</IonLabel>
+              <IonInput
+                type="password"
+                value={password}
+                onIonChange={e => setPassword(e.detail.value!)}
+              />
+            </IonItem>
 
-          <IonButton expand="block" type="submit" className="ion-margin-top">
-            Login
-          </IonButton>
-        </form>
+            <IonButton expand="block" type="submit" className="ion-margin-top">
+              Login
+            </IonButton>
+          </form>
+        </div>
       </IonContent>
     </IonPage>
   );

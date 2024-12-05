@@ -1,0 +1,26 @@
+.tabs-page {
+  --background: none;
+  background-image: url('/images/timesheet-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+.content-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  margin: 1rem;
+  border-radius: 12px;
+  padding: 1.5rem;
+  height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  .content-container {
+    max-width: 800px;
+    margin: 2rem auto;
+  }
+} 

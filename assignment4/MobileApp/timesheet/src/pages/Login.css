@@ -1,16 +1,34 @@
+.login-page {
+  --background: none;
+  background-image: url('/images/login-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .login-form {
+  width: 90%;
   max-width: 400px;
-  margin: 2rem auto;
-  padding: 1rem;
+  margin: 1rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .login-form ion-item {
-  margin-bottom: 1rem;
   --background: transparent;
+  margin-bottom: 1rem;
 }
 
-@media (max-width: 576px) {
+@media (min-width: 768px) {
   .login-form {
-    margin: 1rem;
+    width: 400px;
+    margin: 2rem auto;
   }
 } 
