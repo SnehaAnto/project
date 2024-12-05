@@ -1,0 +1,18 @@
+.history-list {
+  margin: 16px 0;
+}
+
+ion-item {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+}
+
+.entry-date {
+  font-weight: bold;
+}
+
+.entry-hours {
+  color: var(--ion-color-medium);
+} 

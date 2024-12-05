@@ -1,0 +1,15 @@
+.profile-card {
+  margin: 16px;
+}
+
+ion-card-header {
+  padding-bottom: 0;
+}
+
+.logout-button {
+  margin: 16px;
+}
+
+ion-item {
+  --padding-start: 0;
+} 
