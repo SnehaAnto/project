@@ -12,6 +12,11 @@ interface TimesheetEntry {
   description: string;
 }
 
+interface Task {
+  _id: string;
+  title: string;
+}
+
 export default function Timesheet() {
   const router = useRouter();
   const [entries, setEntries] = useState<TimesheetEntry[]>([]);
@@ -24,21 +29,35 @@ export default function Timesheet() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [selectedEntryId, setSelectedEntryId] = useState<string>('');
   const [userRole, setUserRole] = useState<string>('');
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [toast, setToast] = useState<{show: boolean; message: string; type: 'success' | 'error'}>({
+    show: false,
+    message: '',
+    type: 'success'
+  });
 
   useEffect(() => {
-    loadTimesheets();
     // Get user role from JWT token
     const token = localStorage.getItem('accessToken');
     if (token) {
       const payload = JSON.parse(atob(token.split('.')[1]));
       setUserRole(payload.role);
     }
+    fetchTasks();
   }, []);
 
-  const loadTimesheets = async () => {
+  useEffect(() => {
+    loadTimesheets(currentPage);
+  }, [currentPage]);
+
+  const loadTimesheets = async (page: number = 1) => {
+    if (page < 1) page = 1;
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('http://localhost:3001/timesheet', {
+      const userId = JSON.parse(localStorage.getItem('userData')||'{}').username;
+      const response = await fetch(`http://localhost:3001/timesheet/${userId}/entries?page=${page}&limit=5`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -46,9 +65,34 @@ export default function Timesheet() {
       });
       const data = await response.json();
       setEntries(data.data || []);
+      setTotalPages(Math.max(1, data.lastPage));
+      setCurrentPage(Math.min(page, data.lastPage));
     } catch (error) {
       console.error('Error loading timesheets:', error);
       setEntries([]);
+      setCurrentPage(0);
+      setTotalPages(1);
+    }
+  };
+
+  const fetchTasks = async () => {
+    try {
+      const userId = JSON.parse(localStorage.getItem('userData')||'{}').username;
+      const response = await fetch(`http://localhost:3001/timesheet/${userId}/tasks`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to load projects');
+      }
+
+      const data = await response.json();
+      setTasks(data);
+    } catch (error) {
+      console.error('Error loading projects:', error);
+      // Handle error (you might want to add a toast notification here)
     }
   };
 
@@ -65,22 +109,24 @@ export default function Timesheet() {
         body: JSON.stringify({
           ...formData,
           hours: Number(formData.hours),
+          userId: JSON.parse(localStorage.getItem('userData')||'{}').username
         }),
       });
 
       if (response.ok) {
-        // Clear form
         setFormData({ date: '', project: '', hours: '', description: '' });
-        // Reload the entries list
         await loadTimesheets();
-        alert('Entry added successfully!');
+        setToast({ show: true, message: 'Entry added successfully!', type: 'success' });
+        setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
       } else {
         const errorData = await response.json();
-        alert(errorData.message || 'Failed to add entry');
+        setToast({ show: true, message: errorData.message || 'Failed to add entry', type: 'error' });
+        setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
       }
     } catch (error) {
       console.error('Error submitting timesheet:', error);
-      alert('Failed to add entry. Please try again.');
+      setToast({ show: true, message: 'Failed to add entry. Please try again.', type: 'error' });
+      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
     }
   };
 
@@ -102,14 +148,17 @@ export default function Timesheet() {
 
       if (response.ok) {
         await loadTimesheets();
-        alert('Entry deleted successfully');
+        setToast({ show: true, message: 'Entry deleted successfully', type: 'success' });
+        setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
       } else {
         const errorData = await response.json();
-        alert(errorData.message || 'Failed to delete entry');
+        setToast({ show: true, message: errorData.message || 'Failed to delete entry', type: 'error' });
+        setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
       }
     } catch (error) {
       console.error('Error deleting entry:', error);
-      alert('Failed to delete entry. Please try again.');
+      setToast({ show: true, message: 'Failed to delete entry. Please try again.', type: 'error' });
+      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
     }
     setShowDeleteConfirm(false);
   };
@@ -131,36 +180,12 @@ export default function Timesheet() {
       />
 
       <div className="relative z-10">
-        <nav className="bg-white/90 backdrop-blur-sm shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16">
-              <div className="flex items-center space-x-4">
-                <span className="text-blue-600 font-bold text-xl">Timesheet App</span>
-                {userRole === 'hr' && (
-                  <a
-                    href="/hr"
-                    className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    HR Dashboard
-                  </a>
-                )}
-              </div>
-              <button
-                onClick={handleLogout}
-                className="text-gray-600 hover:text-gray-900"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </nav>
-
         <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
             <h1 className="text-2xl font-bold text-white mb-6">Timesheet</h1>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <form onSubmit={handleSubmit} className="bg-white/90 backdrop-blur-sm shadow-sm rounded-lg p-6">
+              <form onSubmit={handleSubmit} className="bg-white/90 backdrop-blur-sm shadow-sm rounded-lg p-6 h-[380px]">
                 <div className="space-y-4">
                   <div>
                     <label htmlFor="date" className="block text-sm font-medium text-gray-700">
@@ -180,14 +205,21 @@ export default function Timesheet() {
                     <label htmlFor="project" className="block text-sm font-medium text-gray-700">
                       Project
                     </label>
-                    <input
-                      type="text"
+                    <select
                       id="project"
-                      value={formData.project}
-                      onChange={(e) => setFormData({...formData, project: e.target.value})}
+                      name="project"
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      value={formData.project}
+                      onChange={(e) => setFormData({ ...formData, project: e.target.value })}
                       required
-                    />
+                    >
+                      <option key="option_0" value="">Select a project</option>
+                      {tasks.map((task) => (
+                        <option key={task._id + task.title} value={task.title}>
+                          {task.title}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
@@ -249,7 +281,7 @@ export default function Timesheet() {
                             <td className="px-6 py-4 whitespace-nowrap">{new Date(entry.date).toLocaleDateString()}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{entry.project}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{entry.hours}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{entry.description}</td>
+                            <td className="px-6 py-4">{entry.description}</td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <button
                                 onClick={() => confirmDelete(entry._id)}
@@ -269,6 +301,29 @@ export default function Timesheet() {
                       )}
                     </tbody>
                   </table>
+                </div>
+                
+                {/* Pagination Controls */}
+                <div className="mt-4 flex justify-between items-center">
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Previous
+                  </button>
+                  
+                  <span className="text-sm text-gray-700">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Next
+                  </button>
                 </div>
               </div>
             </div>
@@ -297,6 +352,16 @@ export default function Timesheet() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {toast.show && (
+        <div 
+          className={`fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-md shadow-lg ${
+            toast.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+          } text-white transition-opacity duration-300 z-50`}
+        >
+          {toast.message}
         </div>
       )}
     </div>

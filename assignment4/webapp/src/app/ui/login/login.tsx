@@ -48,7 +48,7 @@ export default function Login() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center">
+    <div className="absolute top-0 w-full min-h-screen flex items-center justify-center">
       {/* Background Image */}
       <Image
         src="/images/login-bg.jpg"

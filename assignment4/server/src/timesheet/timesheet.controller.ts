@@ -15,7 +15,7 @@ export class TimesheetController {
 
     @Post()
     async create(@Body() timesheetDto: TimesheetDto): Promise<Timesheet> {
-        return this.timesheetService.create(timesheetDto);
+        return this.timesheetService.create(timesheetDto, timesheetDto.userId || '');
     }
 
     @Get()
@@ -58,5 +58,14 @@ export class TimesheetController {
     async getDeletedEntries() {
         const deletedEntries = await this.timesheetService.findDeleted();
         return { data: deletedEntries };
+    }
+
+    @Get('/:username/entries')
+    async getUserEntries(
+        @Param('username') username: string,
+        @Query('page') page: number = 1,
+        @Query('limit') limit: number = 10
+    ): Promise<{ data: Timesheet[]; total: number; page: number; lastPage: number }> {
+        return this.timesheetService.findUserEntries(username, page, limit);
     }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   IonContent, IonPage, IonHeader, IonToolbar, IonTitle,
   IonItem, IonLabel, IonInput, IonTextarea, IonButton,
@@ -6,16 +6,52 @@ import {
 } from '@ionic/react';
 import './NewEntry.css';
 
+interface Task {
+  id: string;
+  title: string;
+}
+
 const NewEntry: React.FC = () => {
   const [date, setDate] = useState(new Date().toISOString());
   const [project, setProject] = useState('');
   const [hours, setHours] = useState('');
   const [description, setDescription] = useState('');
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [present] = useIonToast();
 
-  const handleSubmit = async () => {
-    const descriptionInput = document.querySelector('ion-textarea')?.value || '';
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
     try {
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+      const response = await fetch(`http://localhost:3001/timesheet/${userData.username}/tasks`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to load projects');
+      }
+
+      const data = await response.json();
+      setTasks(data);
+    } catch (error) {
+      console.error('Error loading projects:', error);
+      present({
+        message: 'Failed to load projects. Please try again.',
+        duration: 2000,
+        position: 'bottom',
+        color: 'danger'
+      });
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
       const response = await fetch('http://localhost:3001/timesheet', {
         method: 'POST',
         headers: {
@@ -26,7 +62,8 @@ const NewEntry: React.FC = () => {
           date,
           project,
           hours: Number(hours),
-          description: descriptionInput
+          description: document.querySelector('ion-textarea')?.value as string,
+          userId: userData.username
         })
       });
 
@@ -73,20 +110,26 @@ const NewEntry: React.FC = () => {
       <IonContent className="ion-padding">
         <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
           <IonItem>
-            <IonLabel position="stacked">Date</IonLabel>
+            <IonLabel>Date</IonLabel>
             <IonDatetime
               value={date}
               onIonChange={e => setDate(typeof e.detail.value === 'string' ? e.detail.value : '')}
               presentation="date"
+              size="cover"
+              preferWheel={false}
+              showDefaultButtons={false}
+              style={{ maxWidth: '280px' }}
             />
           </IonItem>
 
           <IonItem>
             <IonLabel position="stacked">Project</IonLabel>
             <IonSelect value={project} onIonChange={e => setProject(e.detail.value)}>
-              <IonSelectOption value="Project A">Project A</IonSelectOption>
-              <IonSelectOption value="Project B">Project B</IonSelectOption>
-              <IonSelectOption value="Project C">Project C</IonSelectOption>
+              {tasks.map(task => (
+                <IonSelectOption key={task.id} value={task.title}>
+                  {task.title}
+                </IonSelectOption>
+              ))}
             </IonSelect>
           </IonItem>
 
@@ -98,6 +141,9 @@ const NewEntry: React.FC = () => {
               onIonChange={e => setHours(e.detail.value!)}
               min="0"
               max="24"
+              step="0.5"
+              inputmode="decimal"
+              clearInput={true}
             />
           </IonItem>
 

@@ -21,4 +21,8 @@ export class TimesheetDto {
     @IsString()
     @Transform(({ value }) => value?.trim())
     readonly description: string;
+
+    @IsNotEmpty()
+    @IsString()
+    readonly userId: string;
 }

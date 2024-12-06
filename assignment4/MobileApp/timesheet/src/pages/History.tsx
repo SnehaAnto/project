@@ -31,7 +31,8 @@ const History: React.FC = () => {
 
   const loadEntries = async () => {
     try {
-      const response = await fetch('http://localhost:3001/timesheet', {
+      const userId = JSON.parse(localStorage.getItem('userData')||'{}').username;
+      const response = await fetch(`http://localhost:3001/timesheet/${userId}/entries?limit=100`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }

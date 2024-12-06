@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import {
   IonContent, IonPage, IonHeader, IonToolbar, IonTitle,
   IonList, IonItem, IonLabel, IonButton, IonIcon,
-  IonCard, IonCardContent, IonCardHeader, IonCardTitle, useIonToast
+  IonCard, IonCardContent, IonCardHeader, useIonToast, IonAvatar, IonSkeletonText
 } from '@ionic/react';
-import { logOut, person } from 'ionicons/icons';
-import { useIonRouter, useIonViewWillEnter } from '@ionic/react';
+import { logOut, person, mail, shield } from 'ionicons/icons';
+import { useIonRouter } from '@ionic/react';
 import './Profile.css';
 
 interface UserProfile {
@@ -17,134 +17,109 @@ interface UserProfile {
 const Profile: React.FC = () => {
   const router = useIonRouter();
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
   const [present] = useIonToast();
 
-  const fetchProfile = async () => {
-    try {
-      const response = await fetch('http://localhost:3001/users/profile', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setProfile(data);
-      } else {
-        const errorData = await response.json();
+  useEffect(() => {
+    const loadProfile = () => {
+      try {
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        setProfile({
+          username: userData.username || '',
+          email: userData.email || '',
+          role: userData.role || ''
+        });
+      } catch (error) {
         present({
-          message: errorData.message || 'Failed to load profile',
-          duration: 2000,
-          position: 'bottom',
+          message: 'Failed to load profile data',
+          duration: 3000,
           color: 'danger'
         });
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      present({
-        message: 'Network error. Please try again.',
-        duration: 2000,
-        position: 'bottom',
-        color: 'danger'
-      });
-    }
-  };
+    };
 
-  useEffect(() => {
-    fetchProfile();
+    loadProfile();
   }, [present]);
-
-  useIonViewWillEnter(() => {
-    fetchProfile();
-  });
 
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('userData');
     router.push('/login');
-  };
-
-  const handleUpdateProfile = async () => {
-    try {
-      const response = await fetch('http://localhost:3001/users/profile', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        }
-      });
-
-      if (response.ok) {
-        present({
-          message: 'Profile updated successfully',
-          duration: 2000,
-          position: 'bottom',
-          color: 'success'
-        });
-      } else {
-        const errorData = await response.json();
-        present({
-          message: errorData.message || 'Failed to update profile',
-          duration: 2000,
-          position: 'bottom',
-          color: 'danger'
-        });
-      }
-    } catch (error) {
-      present({
-        message: 'Network error. Please try again.',
-        duration: 2000,
-        position: 'bottom',
-        color: 'danger'
-      });
-    }
   };
 
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar color="primary">
           <IonTitle>Profile</IonTitle>
         </IonToolbar>
       </IonHeader>
 
       <IonContent className="ion-padding">
-        {profile && (
+        {loading ? (
           <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>User Profile</IonCardTitle>
-            </IonCardHeader>
             <IonCardContent>
-              <IonList>
-                <IonItem>
-                  <IonIcon icon={person} slot="start" />
-                  <IonLabel>
-                    <h2>Username</h2>
-                    <p>{profile.username}</p>
-                  </IonLabel>
-                </IonItem>
-                <IonItem>
-                  <IonLabel>
-                    <h2>Email</h2>
-                    <p>{profile.email}</p>
-                  </IonLabel>
-                </IonItem>
-                <IonItem>
-                  <IonLabel>
-                    <h2>Role</h2>
-                    <p>{profile.role}</p>
-                  </IonLabel>
-                </IonItem>
-              </IonList>
+              <IonSkeletonText animated style={{ width: '60%' }} />
+              <IonSkeletonText animated style={{ width: '80%' }} />
+              <IonSkeletonText animated style={{ width: '70%' }} />
             </IonCardContent>
           </IonCard>
-        )}
+        ) : (
+          profile && (
+            <div className="ion-text-center">
+              <IonCard>
+                <IonCardHeader>
+                  <IonAvatar style={{ margin: '0 auto', width: '100px', height: '100px' }}>
+                    <img 
+                      src={`https://ui-avatars.com/api/?name=${profile.username}&background=random&size=200`} 
+                      alt="avatar"
+                    />
+                  </IonAvatar>
+                </IonCardHeader>
 
-        <IonButton 
-          expand="block" 
-          color="danger" 
-          className="ion-margin-top"
-          onClick={handleLogout}
-        >
-          <IonIcon icon={logOut} slot="start" />
-          Logout
-        </IonButton>
+                <IonCardContent>
+                  <IonList lines="none">
+                    <IonItem>
+                      <IonIcon icon={person} slot="start" color="primary" />
+                      <IonLabel>
+                        <h2 className="ion-text-wrap">Username</h2>
+                        <p>{profile.username}</p>
+                      </IonLabel>
+                    </IonItem>
+
+                    <IonItem>
+                      <IonIcon icon={mail} slot="start" color="primary" />
+                      <IonLabel>
+                        <h2 className="ion-text-wrap">Email</h2>
+                        <p>{profile.email}</p>
+                      </IonLabel>
+                    </IonItem>
+
+                    <IonItem>
+                      <IonIcon icon={shield} slot="start" color="primary" />
+                      <IonLabel>
+                        <h2 className="ion-text-wrap">Role</h2>
+                        <p>{profile.role}</p>
+                      </IonLabel>
+                    </IonItem>
+                  </IonList>
+                </IonCardContent>
+              </IonCard>
+
+              <IonButton 
+                expand="block" 
+                color="danger" 
+                className="ion-margin-top ion-margin-bottom"
+                onClick={handleLogout}
+              >
+                <IonIcon icon={logOut} slot="start" />
+                Logout
+              </IonButton>
+            </div>
+          )
+        )}
       </IonContent>
     </IonPage>
   );

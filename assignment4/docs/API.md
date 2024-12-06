@@ -27,9 +27,8 @@ POST /auth/register
 {
   "email": "employee@example.com",
   "password": "securePassword123",
-  "firstName": "John",
-  "lastName": "Doe",
-  "role": "EMPLOYEE"  // EMPLOYEE or HR
+  "username": "johndoe",
+  "role": "employee"  // employee or hr
 }
 ```
 
@@ -38,9 +37,8 @@ POST /auth/register
 {
   "id": "65f4a3b2c1d0e2f3a4b5c6d7",
   "email": "employee@example.com",
-  "firstName": "John",
-  "lastName": "Doe",
-  "role": "EMPLOYEE"
+  "firstName": "johndoe",
+  "role": "employee"
 }
 ```
 
@@ -64,45 +62,14 @@ POST /auth/login
   "user": {
     "id": "65f4a3b2c1d0e2f3a4b5c6d7",
     "email": "employee@example.com",
-    "role": "EMPLOYEE"
+    "role": "employee"
   }
 }
 ```
 
-#### Get Profile
+#### Get All Users
 ```http
-GET /auth/profile
-```
-
-**Response (200):**
-```json
-{
-  "id": "65f4a3b2c1d0e2f3a4b5c6d7",
-  "email": "employee@example.com",
-  "firstName": "John",
-  "lastName": "Doe",
-  "role": "EMPLOYEE"
-}
-```
-
-#### Change Password
-```http
-PUT /auth/change-password
-```
-
-**Request Body:**
-```json
-{
-  "currentPassword": "oldPassword123",
-  "newPassword": "newPassword123"
-}
-```
-
-**Response (200):**
-```json
-{
-  "message": "Password updated successfully"
-}
+GET /auth/users
 ```
 
 ### Timesheet Module
@@ -119,7 +86,8 @@ POST /timesheet
   "date": "2024-03-15",
   "hours": 8,
   "description": "Worked on project documentation",
-  "project": "Project A"
+  "project": "Project A",
+  "userId": "johndoe"
 }
 ```
 
@@ -131,7 +99,7 @@ POST /timesheet
   "hours": 8,
   "description": "Worked on project documentation",
   "project": "Project A",
-  "userId": "65f4a3b2c1d0e2f3a4b5c6d7",
+  "userId": "johndoe",
   "createdAt": "2024-03-15T10:00:00.000Z",
   "updatedAt": "2024-03-15T10:00:00.000Z"
 }
@@ -139,7 +107,7 @@ POST /timesheet
 
 #### Get Timesheet Entries (with pagination)
 ```http
-GET /timesheet?page=1&limit=10
+GET /timesheet/:userId/entries?page=1&limit=10
 ```
 **Auth:** Required (EMPLOYEE, HR)
 
@@ -157,7 +125,7 @@ GET /timesheet?page=1&limit=10
       "hours": 8,
       "description": "Worked on project documentation",
       "project": "Project A",
-      "userId": "65f4a3b2c1d0e2f3a4b5c6d7",
+      "userId": "johndoe",
       "createdAt": "2024-03-15T10:00:00.000Z",
       "updatedAt": "2024-03-15T10:00:00.000Z"
     }
@@ -200,7 +168,7 @@ PUT /timesheet/:id
 ```http
 DELETE /timesheet/:id
 ```
-**Auth:** Required (HR only)
+**Auth:** Required (EMPLOYEE, HR)
 
 **Response (200):**
 ```json
@@ -232,6 +200,31 @@ GET /timesheet/deleted
   ]
 }
 ```
+
+#### Add Task to User
+```http
+POST /timesheet/:id/task
+```
+**Auth:** Required (HR only)
+
+**Request Body:**
+```json
+{
+  "title": "Project Name"
+}
+```
+
+#### Get User Tasks
+```http
+GET /timesheet/:id/tasks
+```
+**Auth:** Required (EMPLOYEE, HR)
+
+#### Delete Task
+```http
+DELETE /timesheet/:id/task/:taskId
+```
+**Auth:** Required (HR)
 
 ### User Module
 
@@ -271,30 +264,6 @@ GET /users/:id
   "firstName": "John",
   "lastName": "Doe",
   "role": "EMPLOYEE"
-}
-```
-
-#### Update User Role
-```http
-PUT /users/:id/role
-```
-**Auth:** Required (HR only)
-
-**Request Body:**
-```json
-{
-  "role": "HR"
-}
-```
-
-**Response (200):**
-```json
-{
-  "id": "65f4a3b2c1d0e2f3a4b5c6d7",
-  "email": "employee@example.com",
-  "firstName": "John",
-  "lastName": "Doe",
-  "role": "HR"
 }
 ```
 

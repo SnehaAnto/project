@@ -1,22 +1,3 @@
-.entry-form {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
 ion-datetime {
-  --background: var(--ion-color-light);
-  border-radius: 8px;
-  margin: 8px 0;
-}
-
-ion-textarea {
-  --background: var(--ion-color-light);
-  border-radius: 8px;
-  margin: 8px 0;
-}
-
-@media (prefers-color-scheme: dark) {
-  ion-datetime, ion-textarea {
-    --background: var(--ion-color-medium);
-  }
+  --background: transparent;
 } 

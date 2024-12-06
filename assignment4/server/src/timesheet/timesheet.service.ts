@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Timesheet } from './timesheet.schema';
@@ -12,25 +12,29 @@ export class TimesheetService {
     constructor(@InjectModel(Timesheet.name) private timesheetModel: Model<Timesheet>,
                 @InjectModel(User.name) private userModel: Model<User>) {}
 
-    async create(timesheetDto: TimesheetDto): Promise<Timesheet> {
-        const createdTimesheet = new this.timesheetModel(timesheetDto);
-        return createdTimesheet.save();
+    async create(timesheetDto: TimesheetDto, username: string): Promise<Timesheet> {
+
+        const newTimesheet = new this.timesheetModel({
+            ...timesheetDto,
+            userId: username
+        });
+
+        return newTimesheet.save();
     }
 
     async findAll(page: number = 1, limit: number = 10): Promise<{ data: Timesheet[]; total: number; page: number; lastPage: number }> {
         const skip = (page - 1) * limit;
+        const total = await this.timesheetModel.countDocuments({ deletedAt: null });
         
-        const [data, total] = await Promise.all([
-            this.timesheetModel
-                .find()
-                .skip(skip)
-                .limit(limit)
-                .exec(),
-            this.timesheetModel.countDocuments()
-        ]);
+        const data = await this.timesheetModel
+            .find({ deletedAt: null })
+            .sort({ _id: -1 })
+            .skip(skip)
+            .limit(limit)
+            .exec();
 
         const lastPage = Math.ceil(total / limit);
-
+        
         return {
             data,
             total,
@@ -56,6 +60,7 @@ export class TimesheetService {
     async addTask(username: string, task: Task) {
         const taskWithId = {
             ...task,
+            isActive: true,
             id: task.id || new mongoose.Types.ObjectId().toString()
         };
 
@@ -87,5 +92,37 @@ export class TimesheetService {
         return this.timesheetModel.find({ 
             deletedAt: { $ne: null } 
         }).exec();
+    }
+
+    async findUserEntries(
+        username: string,
+        page: number = 1,
+        limit: number = 10
+    ): Promise<{ data: Timesheet[]; total: number; page: number; lastPage: number }> {
+        const skip = (page - 1) * limit;
+        
+        const user = await this.userModel.findOne({ username: username });
+        if (!user) {
+            throw new NotFoundException(`User ${username} not found`);
+        }
+        
+        const [entries, total] = await Promise.all([
+            this.timesheetModel
+                .find({ userId: username, deletedAt: null })
+                .sort({ date: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec(),
+            this.timesheetModel.countDocuments({ userId: username, deletedAt: null })
+        ]);
+
+        const lastPage = Math.ceil(total / limit);
+
+        return {
+            data: entries,
+            total,
+            page,
+            lastPage
+        };
     }
 }
