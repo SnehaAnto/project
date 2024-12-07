@@ -129,6 +129,12 @@ export default function Login() {
               Login
             </button>
           </div>
+
+          <div className="text-sm text-center mt-4">
+            <a href="/register" className="font-medium text-blue-600 hover:text-blue-500">
+              Don't have an account? Sign up!
+            </a>
+          </div>
         </form>
       </div>
     </div>

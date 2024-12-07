@@ -113,6 +113,16 @@ const Login: React.FC = () => {
           <IonButton expand="block" type="submit" className="ion-margin-top">
             Login
           </IonButton>
+
+          <IonButton 
+            expand="block" 
+            fill="clear" 
+            onClick={() => router.push('/register')}
+            className="ion-margin-top"
+            size="small"
+          >
+            Don't have an account? Sign up!
+          </IonButton>
         </form>
       </IonContent>
     </IonPage>
