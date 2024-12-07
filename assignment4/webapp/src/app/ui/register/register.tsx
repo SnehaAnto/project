@@ -45,7 +45,7 @@ export default function Register() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center">
+    <div className="absolute top-0 w-full min-h-screen flex items-center justify-center">
       <Image
         src="/images/login-bg.jpg"
         alt="Background"
