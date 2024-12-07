@@ -65,6 +65,7 @@ Manages user operations:
 
 server/src/
 
+##Auth Module
 ├── auth/
 
 │   ├── guards/
@@ -84,6 +85,7 @@ server/src/
 │   └── auth.module.ts
 
 
+##Timesheet Module
 
 ├── timesheet/
 
@@ -93,15 +95,6 @@ server/src/
 
 │   └── timesheet.schema.ts
 
-
-
-├── users/
-
-│   ├── user.controller.ts
-
-│   ├── user.service.ts
-
-│   └── user.schema.ts
 
 └── main.ts
 

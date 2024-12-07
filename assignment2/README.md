@@ -36,6 +36,8 @@ This module manages user authentication with a focus on login functionality. It 
 
 server/src/
 
+##Timesheet Module
+
 ├── timesheet/
 
 │   ├── timesheet.controller.ts # Timesheet API controller
@@ -45,6 +47,7 @@ server/src/
 │   └── timesheet.schema.ts     # Mongoose schema for timesheet entries
 
 
+##Login Module
 
 ├── login/
 
