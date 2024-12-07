@@ -83,7 +83,7 @@ The application connects to a NestJS backend running on `http://localhost:3001` 
 - `/auth/login` - User authentication
 - `/auth/register` - New user registration
 - `/timesheet` - Timesheet entry management
-- `/timesheet/:id/tasks` - Project/task management
+
 
 ## Styling Features
 

@@ -65,11 +65,10 @@ Manages user operations:
 
 server/src/
 
+##Auth Module
 ├── auth/
 
 │   ├── guards/
-
-│   │   ├── jwt-auth.guard.ts
 
 │   │   └── roles.guard.ts
 
@@ -84,6 +83,7 @@ server/src/
 │   └── auth.module.ts
 
 
+##Timesheet Module
 
 ├── timesheet/
 
@@ -93,15 +93,6 @@ server/src/
 
 │   └── timesheet.schema.ts
 
-
-
-├── users/
-
-│   ├── user.controller.ts
-
-│   ├── user.service.ts
-
-│   └── user.schema.ts
 
 └── main.ts
 

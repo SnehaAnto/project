@@ -96,17 +96,6 @@ server/src/
 │   └── timesheet.schema.ts
 
 
-
-├── users/
-
-│   ├── user.controller.ts
-
-│   ├── user.service.ts
-
-│   └── user.schema.ts
-
-└── main.ts
-
 ## Technologies Used
 - NestJS: Backend framework
 - MongoDB Atlas: Database

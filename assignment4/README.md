@@ -30,17 +30,11 @@ server/
 
 │ ├── auth/ # Authentication logic and guards
 
+│ │ ├── guards/ # Route protection middleware
+
 │ ├── timesheet/ # Timesheet CRUD operations
 
-│ ├── users/ # User management
-
-│ ├── tasks/ # Task management
-
-│ ├── guards/ # Route protection middleware
-
 │ ├── dto/ # Data transfer objects
-
-│ └── schemas/ # MongoDB schemas
 
 ├── test/ # Test files
 
@@ -56,17 +50,13 @@ webapp/
 
 │ │ ├── ui/ # Reusable UI components
 
-│ │ ├── guards/ # Route protection
+│ │ │ ├── guards/ # Route protection
 
-│ │ ├── hr/ # HR dashboard
+│ │ │ ├── hr/ # HR dashboard
 
-│ │ └── timesheet/ # Timesheet management
-
-│ └── styles/ # Global styles
+│ │ │ ├── timesheet/ # Timesheet management
 
 ├── public/ # Static assets
-
-└── types/ # TypeScript type definitions
 
 
 ### Mobile Application Directory (`/MobileApp/timesheet`)
@@ -76,17 +66,11 @@ MobileApp/timesheet/
 
 │ ├── pages/ # Application pages/routes
 
-│ ├── components/ # Reusable components
-
-│ ├── contexts/ # State management
+│ ├── context/ # State management
 
 │ ├── theme/ # Styling and theming
 
-│ └── services/ # API integration
-
 ├── public/ # Static assets
-
-└── capacitor.config.ts # Native platform config
 
 
 ## System Architecture
