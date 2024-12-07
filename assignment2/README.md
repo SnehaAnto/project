@@ -35,15 +35,27 @@ This module manages user authentication with a focus on login functionality. It 
 ## Project Structure
 
 server/src/
+
 ├── timesheet/
+
 │   ├── timesheet.controller.ts # Timesheet API controller
+
 │   ├── timesheet.service.ts    # Timesheet business logic
+
 │   └── timesheet.schema.ts     # Mongoose schema for timesheet entries
+
+
+
 ├── login/
+
 │   ├── login.controller.ts     # Login API controller
+
 │   ├── login.service.ts        # Login business logic
+
 │   └── user.schema.ts          # Mongoose schema for user authentication
+
 └── main.ts                 # Application entry point
+
 
 ## Technologies Used
 - NestJS: Backend framework for building scalable server-side applications.

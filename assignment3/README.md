@@ -1,7 +1,5 @@
 ## Timesheet App- Phase 3: Authentication, Authorization, and Enhanced Features
 
-    This project, built with NestJS, provides a secure and feature-rich system for managing user timesheets. Phase 3 introduces authentication, authorization, and several enhanced features including pagination, soft delete, and role-based access control.
-
 ## Prerequisites
 - Node.js (v22.11.0 or LTS version as per the setup)
 - MongoDB/ MongoDB Atlas (ensure a MongoDB instance is running or available)
@@ -66,23 +64,45 @@ Manages user operations:
 ## Project Structure
 
 server/src/
+
 ├── auth/
+
 │   ├── guards/
+
 │   │   ├── jwt-auth.guard.ts
+
 │   │   └── roles.guard.ts
+
 │   ├── decorators/
+
 │   │   └── roles.decorator.ts
+
 │   ├── auth.controller.ts
+
 │   ├── auth.service.ts
+
 │   └── auth.module.ts
+
+
+
 ├── timesheet/
+
 │   ├── timesheet.controller.ts
+
 │   ├── timesheet.service.ts
+
 │   └── timesheet.schema.ts
+
+
+
 ├── users/
+
 │   ├── user.controller.ts
+
 │   ├── user.service.ts
+
 │   └── user.schema.ts
+
 └── main.ts
 
 ## Technologies Used

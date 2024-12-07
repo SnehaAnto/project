@@ -53,16 +53,27 @@ Timesheet Page:
 ## File Structure
 
 assignment1/
-├──login-page
-    ├── login-page.html             # Login page HTML
-    ├── login-page.css              # Styles for the login page
-    ├── login-page.js               # JavaScript for login functionality
-├──timesheet
-    ├── timesheet.html              # Timesheet entry page HTML
-    ├── timesheet.css               # Styles for the timesheet page
-    ├── timesheet.js                # JavaScript for timesheet
 
+├──login-page
+
+    ├── login-page.html             # Login page HTML
+
+    ├── login-page.css              # Styles for the login page
+
+    ├── login-page.js               # JavaScript for login functionality
+
+
+
+├──timesheet
+
+    ├── timesheet.html              # Timesheet entry page HTML
+
+    ├── timesheet.css               # Styles for the timesheet page
+
+    ├── timesheet.js                # JavaScript for timesheet
+    
 ├── package.json                    # Project dependencies and scripts
+
 └── .gitignore                      # Files to be ignored by Git
 
 
