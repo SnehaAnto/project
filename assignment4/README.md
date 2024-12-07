@@ -16,7 +16,9 @@ This project implements a complete timesheet management solution with:
 ### Root Directory
 assignment4/
 ├── server/ # NestJS backend server
+
 ├── webapp/ # Next.js web application
+
 └── MobileApp/ # Ionic React mobile application
 
 
