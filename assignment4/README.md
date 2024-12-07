@@ -197,7 +197,6 @@ JWT_EXPIRATION=1h
 ### Authentication
 - POST /auth/register - New user registration
 - POST /auth/login - User authentication
-- GET /auth/profile - Get user profile
 
 ### Timesheet Management
 - POST /timesheet - Create entry

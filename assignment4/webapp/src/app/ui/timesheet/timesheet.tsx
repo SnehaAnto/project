@@ -3,6 +3,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useDebounce } from '../../hooks/useDebounce';
 
 interface TimesheetEntry {
   _id: string;
@@ -92,12 +93,17 @@ export default function Timesheet() {
       setTasks(data);
     } catch (error) {
       console.error('Error loading projects:', error);
-      // Handle error (you might want to add a toast notification here)
     }
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+
+  const debouncedSubmit = useDebounce(async (formData: {
+    date: string;
+    project: string;
+    hours: string;
+    description: string;
+  }) => {
+    //console.log('Debounced submit called at:', new Date().toISOString());
     try {
       const token = localStorage.getItem('accessToken');
       const response = await fetch('http://localhost:3001/timesheet', {
@@ -112,7 +118,7 @@ export default function Timesheet() {
           userId: JSON.parse(localStorage.getItem('userData')||'{}').username
         }),
       });
-
+  
       if (response.ok) {
         setFormData({ date: '', project: '', hours: '', description: '' });
         await loadTimesheets();
@@ -128,7 +134,46 @@ export default function Timesheet() {
       setToast({ show: true, message: 'Failed to add entry. Please try again.', type: 'error' });
       setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
     }
+  }, 500); // 500ms delay
+  
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+  //  console.log('Submit clicked at:', new Date().toISOString());
+    debouncedSubmit(formData);
   };
+  // const handleSubmit = async (e: FormEvent) => {
+  //   e.preventDefault();
+  //   try {
+  //     const token = localStorage.getItem('accessToken');
+  //     const response = await fetch('http://localhost:3001/timesheet', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Authorization': `Bearer ${token}`,
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         ...formData,
+  //         hours: Number(formData.hours),
+  //         userId: JSON.parse(localStorage.getItem('userData')||'{}').username
+  //       }),
+  //     });
+
+  //     if (response.ok) {
+  //       setFormData({ date: '', project: '', hours: '', description: '' });
+  //       await loadTimesheets();
+  //       setToast({ show: true, message: 'Entry added successfully!', type: 'success' });
+  //       setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+  //     } else {
+  //       const errorData = await response.json();
+  //       setToast({ show: true, message: errorData.message || 'Failed to add entry', type: 'error' });
+  //       setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error submitting timesheet:', error);
+  //     setToast({ show: true, message: 'Failed to add entry. Please try again.', type: 'error' });
+  //     setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+  //   }
+  // };
 
   const handleLogout = () => {
     localStorage.removeItem('userData');
