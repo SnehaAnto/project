@@ -1,9 +1,9 @@
 'use client';
-
 import localFont from "next/font/local";
 import "./globals.css";
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,18 +24,39 @@ export default function RootLayout({
   const router = useRouter();
   const [userRole, setUserRole] = useState<string>('');
 
-  useEffect(() => {
-    // Get user role from JWT token
+  const checkUserRole = () => {
     const token = localStorage.getItem('accessToken');
     if (token) {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      setUserRole(payload.role);
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setUserRole(payload.role);
+      } catch (error) {
+        setUserRole('');
+      }
+    } else {
+      setUserRole('');
     }
+  };
+
+  useEffect(() => {
+    checkUserRole();
+
+    // Add event listener for storage changes
+    window.addEventListener('storage', checkUserRole);
+    
+    // Custom event listener for auth changes
+    window.addEventListener('authStateChange', checkUserRole);
+
+    return () => {
+      window.removeEventListener('storage', checkUserRole);
+      window.removeEventListener('authStateChange', checkUserRole);
+    };
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('userData');
+    setUserRole('');
     router.push('/login');
   };
 

@@ -35,7 +35,8 @@ export default function Login() {
           email: tokenPayload.email,
           role: tokenPayload.role
         }));
-
+        // Dispatch custom event for auth state change
+        window.dispatchEvent(new Event('authStateChange'));
         router.push('/timesheet');
       } else {
         const errorData = await response.json();
