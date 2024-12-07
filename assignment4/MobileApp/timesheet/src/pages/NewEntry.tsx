@@ -138,7 +138,8 @@ const NewEntry: React.FC = () => {
             <IonInput
               type="number"
               value={hours}
-              onIonChange={e => setHours(e.detail.value!)}
+             // onIonChange={e => setHours(e.detail.value!)}
+              onIonInput={e => setHours(e.detail.value!)}
               min="0"
               max="24"
               step="0.5"

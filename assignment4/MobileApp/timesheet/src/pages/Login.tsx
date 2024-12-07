@@ -93,7 +93,7 @@ const Login: React.FC = () => {
             <IonInput
               type={loginMethod === 'email' ? 'email' : 'text'}
               value={identifier}
-              onIonChange={e => setIdentifier(e.detail.value!)}
+              onIonInput={e => setIdentifier(e.detail.value!)}
               required
               className="ion-padding-top"
             />
@@ -104,7 +104,7 @@ const Login: React.FC = () => {
             <IonInput
               type="password"
               value={password}
-              onIonChange={e => setPassword(e.detail.value!)}
+              onIonInput={e => setPassword(e.detail.value!)}
               required
               className="ion-padding-top"
             />
