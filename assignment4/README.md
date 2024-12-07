@@ -15,6 +15,7 @@ This project implements a complete timesheet management solution with:
 
 ### Root Directory
 assignment4/
+
 ├── server/ # NestJS backend server
 
 ├── webapp/ # Next.js web application
@@ -24,40 +25,67 @@ assignment4/
 
 ### Server Directory (`/server`)
 server/
+
 ├── src/
+
 │ ├── auth/ # Authentication logic and guards
+
 │ ├── timesheet/ # Timesheet CRUD operations
+
 │ ├── users/ # User management
+
 │ ├── tasks/ # Task management
+
 │ ├── guards/ # Route protection middleware
+
 │ ├── dto/ # Data transfer objects
+
 │ └── schemas/ # MongoDB schemas
+
 ├── test/ # Test files
+
 └── config/ # Configuration files
 
 
 ### Web Application Directory (`/webapp`)
 webapp/
+
 ├── src/
+
 │ ├── app/
+
 │ │ ├── ui/ # Reusable UI components
+
 │ │ ├── guards/ # Route protection
+
 │ │ ├── hr/ # HR dashboard
+
 │ │ └── timesheet/ # Timesheet management
+
 │ └── styles/ # Global styles
+
 ├── public/ # Static assets
+
 └── types/ # TypeScript type definitions
 
 
 ### Mobile Application Directory (`/MobileApp/timesheet`)
 MobileApp/timesheet/
+
 ├── src/
+
 │ ├── pages/ # Application pages/routes
+
 │ ├── components/ # Reusable components
+
 │ ├── contexts/ # State management
+
 │ ├── theme/ # Styling and theming
+
 │ └── services/ # API integration
+
 ├── public/ # Static assets
+
 └── capacitor.config.ts # Native platform config
 
 

@@ -1,4 +1,4 @@
-# Timesheet Mobile Application
+# Phase 4: Final Project - Timesheet Mobile Application
 
 A mobile application built with Ionic React for managing employee timesheets. This application provides a user-friendly interface for tracking work hours, managing projects, and viewing timesheet history.
 

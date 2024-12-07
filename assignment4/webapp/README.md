@@ -1,4 +1,4 @@
-# Timesheet Web Application
+# Phase 4: Final Project - Timesheet Web Application
 
 A modern web application for timesheet management built with Next.js 14, TypeScript, and Tailwind CSS.
 
