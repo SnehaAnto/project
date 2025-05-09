@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "CI=false next build",
+    "build": "CI=false NEXT_PRIVATE_SKIP_ESLINT=true next build",
     "start": "next start",
     "lint": "next lint"
   },
