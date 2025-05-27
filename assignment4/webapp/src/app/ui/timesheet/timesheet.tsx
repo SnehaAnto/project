@@ -58,7 +58,7 @@ export default function Timesheet() {
     try {
       const token = localStorage.getItem('accessToken');
       const userId = JSON.parse(localStorage.getItem('userData')||'{}').username;
-      const response = await fetch(`http://localhost:3001/timesheet/${userId}/entries?page=${page}&limit=5`, {
+      const response = await fetch(`${process.env.API_BASE_URL}/timesheet/${userId}/entries?page=${page}&limit=5`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ export default function Timesheet() {
   const fetchTasks = async () => {
     try {
       const userId = JSON.parse(localStorage.getItem('userData')||'{}').username;
-      const response = await fetch(`http://localhost:3001/timesheet/${userId}/tasks`, {
+      const response = await fetch(`${process.env.API_BASE_URL}/timesheet/${userId}/tasks`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
@@ -106,7 +106,7 @@ export default function Timesheet() {
     //console.log('Debounced submit called at:', new Date().toISOString());
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('http://localhost:3001/timesheet', {
+      const response = await fetch(`${process.env.API_BASE_URL}/timesheet`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -145,7 +145,7 @@ export default function Timesheet() {
   //   e.preventDefault();
   //   try {
   //     const token = localStorage.getItem('accessToken');
-  //     const response = await fetch('http://localhost:3001/timesheet', {
+  //     const response = await fetch('${process.env.API_BASE_URL}/timesheet', {
   //       method: 'POST',
   //       headers: {
   //         'Authorization': `Bearer ${token}`,
@@ -183,7 +183,7 @@ export default function Timesheet() {
   const handleDelete = async (id: string) => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:3001/timesheet/${id}`, {
+      const response = await fetch(`${process.env.API_BASE_URL}/timesheet/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
