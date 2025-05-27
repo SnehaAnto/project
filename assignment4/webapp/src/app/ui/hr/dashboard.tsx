@@ -160,7 +160,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3001/auth/register', {
+      const response = await fetch(`${process.env.API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -276,7 +276,7 @@ export default function HRDashboard() {
   const loadUsers = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('http://localhost:3001/auth/users', {
+      const response = await fetch(`${process.env.API_BASE_URL}/auth/users`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -295,7 +295,7 @@ export default function HRDashboard() {
   const updateUserRole = async (userId: string, newRole: 'hr' | 'employee') => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:3001/users/${userId}/role`, {
+      const response = await fetch(`${process.env.API_BASE_URL}/users/${userId}/role`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
