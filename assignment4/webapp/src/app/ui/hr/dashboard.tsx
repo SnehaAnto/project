@@ -48,7 +48,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ userId, isOpen, onClose }) => {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/timesheet/${userId}/tasks`, {
+      const response = await fetch(`${process.env.API_BASE_URL}/timesheet/${userId}/tasks`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
@@ -65,7 +65,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ userId, isOpen, onClose }) => {
   const addTask = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3001/timesheet/${userId}/task`, {
+      const response = await fetch(`${process.env.API_BASE_URL}/timesheet/${userId}/task`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ userId, isOpen, onClose }) => {
 
   const deleteTask = async (taskId: string) => {
     try {
-      const response = await fetch(`http://localhost:3001/timesheet/${userId}/task/${taskId}`, {
+      const response = await fetch(`${process.env.API_BASE_URL}/timesheet/${userId}/task/${taskId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
