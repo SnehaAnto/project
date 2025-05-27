@@ -48,7 +48,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ userId, isOpen, onClose }) => {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch(`${process.env.API_BASE_URL}/timesheet/${userId}/tasks`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/timesheet/${userId}/tasks`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
@@ -65,7 +65,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ userId, isOpen, onClose }) => {
   const addTask = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.API_BASE_URL}/timesheet/${userId}/task`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/timesheet/${userId}/task`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ userId, isOpen, onClose }) => {
 
   const deleteTask = async (taskId: string) => {
     try {
-      const response = await fetch(`${process.env.API_BASE_URL}/timesheet/${userId}/task/${taskId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/timesheet/${userId}/task/${taskId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
@@ -160,7 +160,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.API_BASE_URL}/auth/register`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -276,7 +276,7 @@ export default function HRDashboard() {
   const loadUsers = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`${process.env.API_BASE_URL}/auth/users`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/users`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -295,7 +295,7 @@ export default function HRDashboard() {
   const updateUserRole = async (userId: string, newRole: 'hr' | 'employee') => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`${process.env.API_BASE_URL}/users/${userId}/role`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${userId}/role`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
